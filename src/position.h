@@ -175,6 +175,7 @@ public:
   bool drop_opposite_colored_bishop() const;
   bool drop_promoted() const;
   PieceType drop_no_doubled() const;
+  bool drop_on_opponent_file() const;
   bool immobility_illegal() const;
   bool gating() const;
   bool walling() const;
@@ -678,6 +679,13 @@ inline Bitboard Position::drop_region(Color c, PieceType pt) const {
   // Sittuyin rook drops
   if (pt == ROOK && sittuyin_rook_drop())
       b &= rank_bb(relative_rank(c, RANK_1, max_rank()));
+  
+  // Restrict drops on opponent's last move file (antiline4 rule)
+  if (drop_on_opponent_file() && st->previous && type_of(st->previous->move) == DROP)
+  {
+      Square prevDropSq = to_sq(st->previous->move);
+      b &= ~file_bb(file_of(prevDropSq));
+  }
 
   if (enclosing_drop())
   {
@@ -775,6 +783,11 @@ inline bool Position::drop_promoted() const {
 inline PieceType Position::drop_no_doubled() const {
   assert(var != nullptr);
   return var->dropNoDoubled;
+}
+
+inline bool Position::drop_on_opponent_file() const {
+  assert(var != nullptr);
+  return var->dropOnOpponentFile;
 }
 
 inline bool Position::immobility_illegal() const {

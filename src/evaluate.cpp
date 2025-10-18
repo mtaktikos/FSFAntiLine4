@@ -1281,24 +1281,29 @@ namespace {
     }
 
     // Connect-n
-    if (pos.connect_n() > 0)
+    if (pos.connect_n() != 0)
     {
+        int n = abs(pos.connect_n());
+        bool antiConnect = pos.connect_n() < 0;
+        
         for (const Direction& d : pos.getConnectDirections())
 
         {
             // Find sufficiently large gaps
             Bitboard b = pos.board_bb() & ~pos.pieces(Them);
-            for (int i = 1; i < pos.connect_n(); i++)
+            for (int i = 1; i < n; i++)
                 b &= shift(d, b);
             // Count number of pieces per gap
             while (b)
             {
                 Square s = pop_lsb(b);
                 int c = 0;
-                for (int j = 0; j < pos.connect_n(); j++)
+                for (int j = 0; j < n; j++)
                     if (pos.pieces(Us) & (s - j * d))
                         c++;
-                score += make_score(200, 200)  * c / (pos.connect_n() - c) / (pos.connect_n() - c);
+                // In anti-connect mode, invert the score (having pieces in a row is bad)
+                int multiplier = antiConnect ? -1 : 1;
+                score += multiplier * make_score(200, 200)  * c / (n - c) / (n - c);
             }
         }
     }

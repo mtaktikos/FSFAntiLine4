@@ -104,6 +104,7 @@ struct Variant {
   bool dropPromoted = false;
   PieceType dropNoDoubled = NO_PIECE_TYPE;
   int dropNoDoubledCount = 1;
+  bool dropOnOpponentFile = false;  // Restrict drops on opponent's last move file
   bool immobilityIllegal = false;
   bool gating = false;
   WallingRule wallingRule = NO_WALLING;
