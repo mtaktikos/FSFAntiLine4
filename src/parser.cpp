@@ -448,6 +448,7 @@ Variant* VariantParser<DoCheck>::parse(Variant* v) {
     parse_attribute("dropPromoted", v->dropPromoted);
     parse_attribute("dropNoDoubled", v->dropNoDoubled, v->pieceToChar);
     parse_attribute("dropNoDoubledCount", v->dropNoDoubledCount);
+    parse_attribute("dropOnOpponentFile", v->dropOnOpponentFile);
     parse_attribute("immobilityIllegal", v->immobilityIllegal);
     parse_attribute("gating", v->gating);
     parse_attribute("wallingRule", v->wallingRule);

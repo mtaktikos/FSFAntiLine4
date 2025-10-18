@@ -2790,14 +2790,18 @@ bool Position::is_immediate_game_end(Value& result, int ply) const {
       return true;
   }
   // Connect-n
-  if (connect_n() > 0)
+  if (connect_n() != 0)
   {
       Bitboard b;
+      int n = abs(connect_n());
+      bool antiConnect = connect_n() < 0;
 
       for (Direction d : var->connect_directions)
       {
-          b = pieces(~sideToMove);
-          for (int i = 1; i < connect_n() && b; i++)
+          // In anti-connect mode, check if current player connects (they lose)
+          // In normal mode, check if opponent connects (current player loses)
+          b = pieces(antiConnect ? sideToMove : ~sideToMove);
+          for (int i = 1; i < n && b; i++)
               b &= shift(d, b);
           if (b)
           {
