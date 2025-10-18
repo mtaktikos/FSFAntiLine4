@@ -681,9 +681,9 @@ inline Bitboard Position::drop_region(Color c, PieceType pt) const {
       b &= rank_bb(relative_rank(c, RANK_1, max_rank()));
   
   // Restrict drops on opponent's last move file (antiline4 rule)
-  if (drop_on_opponent_file() && st->previous && type_of(st->previous->move) == DROP)
+  if (drop_on_opponent_file() && st->previous && type_of(st->move) == DROP)
   {
-      Square prevDropSq = to_sq(st->previous->move);
+      Square prevDropSq = to_sq(st->move);
       b &= ~file_bb(file_of(prevDropSq));
   }
 
