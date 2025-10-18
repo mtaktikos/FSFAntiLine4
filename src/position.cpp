@@ -2798,14 +2798,17 @@ bool Position::is_immediate_game_end(Value& result, int ply) const {
 
       for (Direction d : var->connect_directions)
       {
-          // In anti-connect mode, check if current player connects (they lose)
-          // In normal mode, check if opponent connects (current player loses)
-          b = pieces(antiConnect ? sideToMove : ~sideToMove);
+          // In anti-connect mode, the player who just moved (~sideToMove) loses if they connect
+          // In normal mode, check if opponent (~sideToMove) connects (current player loses)
+          b = pieces(~sideToMove);
           for (int i = 1; i < n && b; i++)
               b &= shift(d, b);
           if (b)
           {
-              result = mated_in(ply);
+              // In anti-connect mode, the player who connected loses (which is ~sideToMove)
+              // So current player (sideToMove) wins
+              // In normal mode, current player loses
+              result = antiConnect ? mate_in(ply) : mated_in(ply);
               return true;
           }
       }
